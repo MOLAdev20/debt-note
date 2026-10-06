@@ -13,7 +13,11 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
-import { formatDate, formatRelativeTime, formatRupiah } from "@/utils/formatter";
+import {
+  formatDate,
+  formatRelativeTime,
+  formatRupiah,
+} from "@/utils/formatter";
 import type { DebtItem } from "@/types/debt";
 
 type StatusFilter = "all" | "unsettled" | "settled";
@@ -32,21 +36,21 @@ type Props = {
 };
 
 const selectClass =
-  "w-full sm:w-auto rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-black focus:outline-none";
+  "w-full sm:w-auto rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-black focus:outline-none cursor-pointer";
 
 function TypeBadge({ type }: { type: DebtItem["type"] }) {
   if (type === "owed_to_me") {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
         <ArrowUpRight size={12} />
-        Dihutang ke saya
+        Piutang
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
       <ArrowDownLeft size={12} />
-      Saya hutang
+      Hutang
     </span>
   );
 }
@@ -177,14 +181,14 @@ export default function DebtTable({
             <p className="flex items-center gap-2 text-sm text-gray-500">
               {isLoading && <Loader2 size={14} className="animate-spin" />}
               {isLoading
-                ? "Lagi nyegerin data..."
+                ? "Merefresh..."
                 : `${visibleDebts.length} dari ${debts.length} catatan`}
             </p>
           </div>
           <button
             type="button"
             onClick={onAddClick}
-            className="flex items-center justify-center gap-2 rounded-xl bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-gray-800 active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 rounded-xl bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-gray-800 active:scale-[0.98] cursor-pointer"
           >
             <Plus size={18} />
             Catat Baru
@@ -193,7 +197,10 @@ export default function DebtTable({
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative w-full sm:max-w-xs">
-            <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+            <Search
+              size={18}
+              className="absolute left-3 top-2.5 text-gray-400"
+            />
             <input
               type="search"
               placeholder="Cari nama orang..."
@@ -205,7 +212,9 @@ export default function DebtTable({
 
           <select
             value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
+            onChange={(event) =>
+              setStatusFilter(event.target.value as StatusFilter)
+            }
             aria-label="Filter status"
             className={selectClass}
           >
@@ -216,7 +225,9 @@ export default function DebtTable({
 
           <select
             value={typeFilter}
-            onChange={(event) => setTypeFilter(event.target.value as TypeFilter)}
+            onChange={(event) =>
+              setTypeFilter(event.target.value as TypeFilter)
+            }
             aria-label="Filter tipe"
             className={selectClass}
           >
@@ -255,7 +266,9 @@ export default function DebtTable({
           <div className="rounded-2xl bg-gray-50 p-4 text-gray-400">
             <Inbox size={28} />
           </div>
-          <h3 className="mt-4 font-semibold text-gray-900">Belum ada catatan</h3>
+          <h3 className="mt-4 font-semibold text-gray-900">
+            Belum ada catatan
+          </h3>
           <p className="mt-1 max-w-sm text-sm text-gray-500">
             Mulai catat utang piutang kamu biar gak lupa siapa yang belum bayar.
           </p>
@@ -379,7 +392,9 @@ export default function DebtTable({
                     </div>
                     <p
                       className={`shrink-0 text-right font-bold ${
-                        isSettled ? "text-gray-400 line-through" : "text-gray-900"
+                        isSettled
+                          ? "text-gray-400 line-through"
+                          : "text-gray-900"
                       }`}
                     >
                       {formatRupiah(debt.amount)}

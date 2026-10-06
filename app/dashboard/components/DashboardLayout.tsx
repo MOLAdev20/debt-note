@@ -93,7 +93,7 @@ export default function DashboardLayoutShell({ children, userEmail }: Props) {
             </div>
             {isSidebarOpen && (
               <span className="font-bold text-lg tracking-tight text-gray-900">
-                Kasbon
+                Debt Note
               </span>
             )}
           </div>
@@ -134,7 +134,7 @@ export default function DashboardLayoutShell({ children, userEmail }: Props) {
           <div className="bg-black text-white p-1.5 rounded-lg">
             <Wallet size={18} />
           </div>
-          <span className="font-bold text-base text-gray-900">Kasbon</span>
+          <span className="font-bold text-base text-gray-900">Debt Note</span>
         </div>
         <button
           onClick={() => setIsMobileMenuOpen(true)}
@@ -176,7 +176,7 @@ export default function DashboardLayoutShell({ children, userEmail }: Props) {
             <div className="bg-black text-white p-1.5 rounded-lg">
               <Wallet size={18} />
             </div>
-            <span className="font-bold text-base text-gray-900">Kasbon</span>
+            <span className="font-bold text-base text-gray-900">Debt Note</span>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
