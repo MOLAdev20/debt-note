@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+
+const inputClass =
+  "w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black";
 
 export default function RegisterForm() {
   const [fullName, setFullName] = useState("");
@@ -14,22 +19,28 @@ export default function RegisterForm() {
     text: string;
   } | null>(null);
 
+  const router = useRouter();
   const supabase = createClient();
 
-  const handleRegister = async () => {
-    setLoading(true);
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setMessage(null);
 
-    // Call Supabase Sign Up API
+    if (password.length < 6) {
+      setMessage({
+        type: "error",
+        text: "Password minimal 6 karakter ya.",
+      });
+      return;
+    }
+
+    setLoading(true);
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.trim(),
       password,
       options: {
-        // Menyimpan data tambahan user ke metadata Supabase Auth
-        data: {
-          full_name: fullName,
-        },
-        // Redirect URL setelah user klik link konfirmasi email
+        data: { full_name: fullName.trim() },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -38,107 +49,126 @@ export default function RegisterForm() {
 
     if (error) {
       setMessage({ type: "error", text: error.message });
-    } else {
-      setMessage({
-        type: "success",
-        text: "Registrasi berhasil! Silakan cek email lu buat verifikasi akun.",
-      });
-      // Reset form
-      setEmail("");
-      setPassword("");
-      setFullName("");
+      return;
     }
+
+    // Kalau konfirmasi email dimatiin, user langsung dapet session.
+    if (data.session) {
+      router.push("/dashboard");
+      router.refresh();
+      return;
+    }
+
+    setMessage({
+      type: "success",
+      text: "Registrasi berhasil! Cek email kamu buat verifikasi akunnya ya.",
+    });
+    setFullName("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
-    <div className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
+    <form
+      onSubmit={handleRegister}
+      noValidate
+      className="w-full max-w-md space-y-6 rounded-2xl border border-gray-100 bg-white p-8 shadow-sm"
+    >
       <div className="text-center">
         <h2 className="text-3xl font-bold tracking-tight text-gray-900">
           Buat Akun Baru
         </h2>
         <p className="mt-2 text-sm text-gray-500">
-          Daftar sekarang buat mulai pake aplikasi
+          Daftar dulu buat mulai nyatet utang piutang kamu
         </p>
       </div>
 
       {message && (
         <div
-          className={`p-3 rounded-lg text-sm ${
+          role="alert"
+          className={`flex items-start gap-2 rounded-lg p-3 text-sm ${
             message.type === "error"
-              ? "bg-red-50 text-red-600 border border-red-200"
-              : "bg-green-50 text-green-600 border border-green-200"
+              ? "border border-red-200 bg-red-50 text-red-600"
+              : "border border-green-200 bg-green-50 text-green-600"
           }`}
         >
-          {message.text}
+          {message.type === "error" ? (
+            <AlertCircle size={18} className="mt-0.5 shrink-0" />
+          ) : (
+            <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
+          )}
+          <span>{message.text}</span>
         </div>
       )}
 
       <div className="space-y-4">
-        {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="fullName" className="mb-1 block text-sm font-medium text-gray-700">
             Nama Lengkap
           </label>
           <input
+            id="fullName"
+            name="fullName"
             type="text"
+            autoComplete="name"
             required
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="John Doe"
-            className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm"
+            onChange={(event) => setFullName(event.target.value)}
+            placeholder="Budi Santoso"
+            className={inputClass}
           />
         </div>
 
-        {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
             Email
           </label>
           <input
+            id="email"
+            name="email"
             type="email"
+            autoComplete="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
             placeholder="nama@email.com"
-            className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm"
+            className={inputClass}
           />
         </div>
 
-        {/* Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
             Password
           </label>
           <input
+            id="password"
+            name="password"
             type="password"
+            autoComplete="new-password"
             required
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             placeholder="Minimal 6 karakter"
-            className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm"
+            className={inputClass}
           />
         </div>
 
-        {/* Submit Button */}
         <button
-          type="button"
-          onClick={handleRegister}
+          type="submit"
           disabled={loading}
-          className="w-full justify-center rounded-lg bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 disabled:opacity-50 transition-all"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-gray-800 disabled:opacity-60"
         >
+          {loading && <Loader2 size={16} className="animate-spin" />}
           {loading ? "Memproses..." : "Daftar"}
         </button>
       </div>
 
       <p className="text-center text-sm text-gray-500">
         Sudah punya akun?{" "}
-        <Link
-          href="/login"
-          className="font-semibold text-black hover:underline"
-        >
+        <Link href="/login" className="font-semibold text-black hover:underline">
           Masuk di sini
         </Link>
       </p>
-    </div>
+    </form>
   );
 }
