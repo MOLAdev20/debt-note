@@ -35,9 +35,10 @@ export default function DashboardClient({
   const [errorMsg, setErrorMsg] = useState<string | null>(initialError);
   const [toast, setToast] = useState<Toast | null>(null);
 
-  const [formModal, setFormModal] = useState<{ open: boolean; debt: DebtItem | null }>(
-    { open: false, debt: null },
-  );
+  const [formModal, setFormModal] = useState<{
+    open: boolean;
+    debt: DebtItem | null;
+  }>({ open: false, debt: null });
   const [pendingDelete, setPendingDelete] = useState<DebtItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -160,7 +161,7 @@ export default function DashboardClient({
             Dashboard
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Ringkasan utang piutang kamu. Semua angka ngitung yang belum lunas aja.
+            Ringkasan utang piutang kamu
           </p>
         </header>
 
@@ -228,7 +229,7 @@ export default function DashboardClient({
       {toast && (
         <div
           role="status"
-          className={`fixed bottom-4 left-1/2 z-[60] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg ${
+          className={`fixed bottom-4 left-1/2 z-60 flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg ${
             toast.kind === "success" ? "bg-gray-900" : "bg-red-600"
           }`}
         >

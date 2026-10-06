@@ -1,4 +1,9 @@
-import { ArrowDownLeft, ArrowUpRight, Scale } from "lucide-react";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  CircleAlertIcon,
+  Scale,
+} from "lucide-react";
 import { formatRupiah } from "@/utils/formatter";
 
 type Props = {
@@ -20,7 +25,7 @@ export default function SummaryCards({ totalOwedToMe, totalIOwe, net }: Props) {
       <div className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-medium text-gray-500">
-            Total dihutang ke saya
+            Total Piutang Saya
           </span>
           <div className="rounded-xl bg-green-50 p-2 text-green-600">
             <ArrowUpRight size={18} />
@@ -35,7 +40,7 @@ export default function SummaryCards({ totalOwedToMe, totalIOwe, net }: Props) {
       <div className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-medium text-gray-500">
-            Total saya hutang
+            Total Hutang Saya
           </span>
           <div className="rounded-xl bg-red-50 p-2 text-red-600">
             <ArrowDownLeft size={18} />
@@ -50,7 +55,7 @@ export default function SummaryCards({ totalOwedToMe, totalIOwe, net }: Props) {
       <div className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-medium text-gray-500">
-            Net (dihutang - hutang)
+            Net (piutang - hutang)
           </span>
           <div className="rounded-xl bg-gray-50 p-2 text-gray-600">
             <Scale size={18} />
@@ -64,9 +69,10 @@ export default function SummaryCards({ totalOwedToMe, totalIOwe, net }: Props) {
           >
             {formatRupiah(net)}
           </p>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+            <CircleAlertIcon size={14} />
             {isNetPositive
-              ? "Aman, kamu masih di posisi dihutang."
+              ? "Uang kamu tersebar di orang lain ."
               : "Waspada, kamu lebih banyak hutang."}
           </p>
         </div>
@@ -87,11 +93,11 @@ export default function SummaryCards({ totalOwedToMe, totalIOwe, net }: Props) {
         <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
           <span className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-green-500" />
-            Dihutang ke saya
+            Piutang saya
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-red-100" />
-            Saya hutang
+            Hutang saya
           </span>
         </div>
       </div>
